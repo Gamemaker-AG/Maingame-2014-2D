@@ -5,18 +5,16 @@ using System.Collections.Generic;
 public class IsleTile : MonoBehaviour 
 {
 	public GameObject start, middle, end;
-	public GameObject bottomStart,bottomMiddle,bottomEnd;
 	public int size = 0;
 	private int lastsize = 0;
 	private Transform trans;
 	private List<GameObject> _pieces;
 	private GameObject _start, _end;
-	private GameObject _bottomStart, _bottomEnd;
-	
+
 	void Awake()
 	{
 		trans = GetComponent<Transform>();
-		_pieces = new List<GameObject>();
+		fixchildren();
 	}
 
 	private void fixchildren()
@@ -25,6 +23,7 @@ public class IsleTile : MonoBehaviour
 		{
 			DestroyImmediate(trans.GetChild(0).gameObject);
 		}
+		_pieces = new List<GameObject>();
 	}
 
 	private bool checkList()
@@ -41,17 +40,17 @@ public class IsleTile : MonoBehaviour
 	{
 		checkList();
 
-		_start  = ((GameObject) Instantiate(start, trans.position, Quaternion.identity));
+		_start  = (GameObject) Instantiate(start, trans.position, trans.rotation);
 		_start.hideFlags = HideFlags.HideInHierarchy;
 		_start.GetComponent<Transform>().parent = trans; 
-		_start.GetComponent<Transform>().Translate(new Vector3(0,0,0));
+		_start.GetComponent<Transform>().Translate(new Vector3(0,0,0),Space.Self);
 
 		_pieces.Add(_start);
 
-		_end 	= ((GameObject) Instantiate(end, trans.position, Quaternion.identity));
+		_end 	= (GameObject) Instantiate(end, trans.position, trans.rotation);
 		_end.hideFlags = HideFlags.HideInHierarchy; 
 		_end.GetComponent<Transform>().parent = trans;
-		_end.GetComponent<Transform>().Translate(new Vector3(1,0,0));
+		_end.GetComponent<Transform>().Translate(new Vector3(1,0,0),Space.Self);
 	}
 
 	private void resize()
@@ -92,8 +91,17 @@ public class IsleTile : MonoBehaviour
 	{
 		checkList();
 
-		if(_start == null && _end == null)
+		if(size == -1)
 		{
+			fixchildren();
+			setupStartEndPoints();
+		}
+
+
+		if(_start == null && _end == null &&
+			start != null && end != null)
+		{
+			fixchildren();
 			setupStartEndPoints();
 		}
 
