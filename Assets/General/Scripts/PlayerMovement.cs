@@ -48,11 +48,9 @@ public class PlayerMovement : MonoBehaviour
                 v.y = jumpPower;
                 --jumpsLeft;
             }
-            else
-            {
-                v.x += movement * speed * Time.deltaTime;
-                v.x = Mathf.Clamp(v.x, -maxAirSpeed, maxAirSpeed);
-            }
+            
+            v.x += movement * speed * Time.deltaTime;
+            v.x = Mathf.Clamp(v.x, -maxAirSpeed, maxAirSpeed);
         }
 
         rb.velocity = v;
