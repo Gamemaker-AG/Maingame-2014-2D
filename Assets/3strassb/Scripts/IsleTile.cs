@@ -5,11 +5,14 @@ using System.Collections.Generic;
 public class IsleTile : MonoBehaviour 
 {
 	public GameObject start, middle, end;
+	public GameObject bottomStart,bottomMiddle,bottomEnd;
 	public int size = 0;
+	public int yoffset = 0;
 	private int lastsize = 0;
 	private Transform trans;
 	private List<GameObject> _pieces;
 	private GameObject _start, _end;
+	private GameObject _bottomStart, _bottomEnd;
 	
 	void Awake()
 	{
@@ -19,32 +22,38 @@ public class IsleTile : MonoBehaviour
 
 	void Start()
 	{
+		print(trans.childCount);
+		for(int i = 0; i < trans.childCount; i++)
+		{
+			DestroyImmediate(trans.GetChild(0).gameObject);
+		}
 
 		_start  = ((GameObject) Instantiate(start, trans.position, Quaternion.identity));
-		_end 	= ((GameObject) Instantiate(end, trans.position, Quaternion.identity));
-		_start.hideFlags = HideFlags.HideInHierarchy; 
-		_end.hideFlags = HideFlags.HideInHierarchy; 
-		_start.GetComponent<Transform>().parent = trans;
-		_end.GetComponent<Transform>().parent = trans;
-		_end.GetComponent<Transform>().Translate(new Vector3(1,0,0));
+		_start.hideFlags = HideFlags.HideInHierarchy;
+		_start.GetComponent<Transform>().parent = trans; 
+		_start.GetComponent<Transform>().Translate(new Vector3(0,yoffset,0));
+
 		_pieces.Add(_start);
+
+		_end 	= ((GameObject) Instantiate(end, trans.position, Quaternion.identity));
+		_end.hideFlags = HideFlags.HideInHierarchy; 
+		_end.GetComponent<Transform>().parent = trans;
+		_end.GetComponent<Transform>().Translate(new Vector3(1,yoffset,0));
 	}
 
 	void Update () 
 	{
-		print("Dinge");
 		if(size != lastsize && size >= 0)
 		{
 			if(size > lastsize)
 			{
 				for(int i = 0; i < (size - lastsize); i++)
 				{
-					print(_pieces.Count-1);
 					var curTrans = _pieces[_pieces.Count-1].GetComponent<Transform>();
-					var curObj = (GameObject) Instantiate(middle, curTrans.position, Quaternion.identity);
+					var curObj = (GameObject) Instantiate(middle, curTrans.position, curTrans.rotation);
 					curObj.hideFlags = HideFlags.HideInHierarchy; 
 					curObj.GetComponent<Transform>().parent = trans;
-					curObj.GetComponent<Transform>().Translate(new Vector3(1,0,0));
+					curObj.GetComponent<Transform>().Translate(new Vector3(1,0,0),Space.Self);
 					_pieces.Add(curObj);
 				}
 			}
