@@ -90,7 +90,9 @@ public class IsleTile : MonoBehaviour
 
 	void Update () 
 	{
-		if(checkList())
+		checkList();
+
+		if(_start == null && _end == null)
 		{
 			setupStartEndPoints();
 		}
