@@ -9,7 +9,12 @@ public class IsleTile : MonoBehaviour
 	private int lastsize = 0;
 	private Transform trans;
 	private List<GameObject> _pieces;
-	private GameObject _start, _end;
+	[HideInInspector]
+	public Vector3 pos = new Vector3(0,0,0);
+	[HideInInspector]
+	public GameObject _start, _end;
+	[HideInInspector]
+	public Vector3 lastPosition = new Vector3(0,0,0);
 
 	void Awake()
 	{
@@ -87,7 +92,7 @@ public class IsleTile : MonoBehaviour
 		setupStartEndPoints();
 	}
 
-	void Update () 
+	public void Update () 
 	{
 		checkList();
 
@@ -110,4 +115,28 @@ public class IsleTile : MonoBehaviour
 			resize();
 		}
 	}
+
+	void OnDrawGizmos()
+	{
+		Gizmos.color = new Color(1,0,1,1f);
+		Gizmos.DrawIcon(_start.transform.position, "Light Gizmo.tiff", true);
+		Gizmos.DrawIcon(_end.transform.position, "Light Gizmo.tiff", true);
+		Gizmos.DrawCube(_start.transform.position + new Vector3(0,0,-3), new Vector3(.2f,.2f,.2f));
+    	Gizmos.DrawCube(_end.transform.position + new Vector3(0,0,-3), new Vector3(.2f,.2f,.2f));
+	}
+
+	void OnDrawGizmosSelected()
+    {
+    	/*
+    	Gizmos.color = new Color(1,1,0,1f);
+		for(int i = 1; i < _pieces.Count; i++)
+		{
+			Gizmos.DrawCube(_pieces[i].transform.position + new Vector3(0,0,-3), 	new Vector3(0.2f,0.2f,0.2f));
+			Gizmos.DrawLine(_pieces[i-1].transform.position, _pieces[i].transform.position);
+		}
+		Gizmos.DrawLine(_pieces[_pieces.Count-1].transform.position, _end.transform.position);
+		*/
+	}
+
+
 }

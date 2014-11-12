@@ -4,6 +4,8 @@ using System.Collections;
 public class FloatingIsland : MonoBehaviour {
 	public Vector3 start, end;
 	public float time;
+	public float waitTime;
+	private float elapsedTime = 0;
 	private Vector3 speed;
 	private Transform trans;
 	private Vector3 destination;
@@ -24,7 +26,11 @@ public class FloatingIsland : MonoBehaviour {
 	}
 	
 	void FixedUpdate () {
-		if(Vector3.Distance(trans.position,destination) > 0.1f)
+		if(elapsedTime < waitTime)
+		{
+			elapsedTime += Time.deltaTime;
+		}
+		else if(Vector3.Distance(trans.position,destination) > 0.1f)
 		{
 			trans.Translate(speed*Time.deltaTime);
 		}
@@ -33,11 +39,15 @@ public class FloatingIsland : MonoBehaviour {
 			speed = speed * -1;
 			if(destination == start)
 			{
+				elapsedTime = 0f;
 				destination = end;
+				trans.position = start;
 			}
 			else
 			{
+				elapsedTime = 0f;
 				destination = start;
+				trans.position = end;
 			}
 		}
 	}
@@ -45,8 +55,6 @@ public class FloatingIsland : MonoBehaviour {
 	void OnDrawGizmosSelected()
     {
     	Gizmos.color = new Color(1,0,0,1f);
-		Gizmos.DrawCube(start + new Vector3(0,0,-3), 	new Vector3(0.2f,0.2f,0.2f));
-		Gizmos.DrawCube(end   + new Vector3(0,0,-3), 	new Vector3(0.2f,0.2f,0.2f));
 		Gizmos.DrawLine(start,end);
 	}
 }
