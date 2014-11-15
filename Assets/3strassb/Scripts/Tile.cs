@@ -1,32 +1,60 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 [ExecuteInEditMode]
-public class IsleTile : MonoBehaviour 
+public class Tile : MonoBehaviour 
 {
 	public GameObject start, middle, end;
 	public int size = 0;
-	private int lastsize = 0;
+	public bool vertical=false;
+	public bool repeatOnlyMiddle=false;
 	private Transform trans;
 	private List<GameObject> _pieces;
+	private int lastsize = 0;
 	[HideInInspector]
-	public Vector3 pos = new Vector3(0,0,0);
+	public Vector3 pos = new Vector3(1,0,0);
 	[HideInInspector]
 	public GameObject _start, _end;
 	[HideInInspector]
 	public Vector3 lastPosition = new Vector3(0,0,0);
 
-	void Awake()
+	public void Awake()
 	{
 		trans = GetComponent<Transform>();
+		checkList();
+	}
+
+	public void Start()
+	{
+		createStartPoints();
+	}
+
+	public void reset()
+	{
 		fixchildren();
+		createStartPoints();
+		lastsize = 0;
+		resize();
+	}
+
+	public void roundPosition()
+	{
+		trans.position = new Vector3((float) Math.Round(trans.position.x,1),
+									 (float) Math.Round(trans.position.y,1),
+									 (float) Math.Round(trans.position.z,1));
+		pos 		   = new Vector3((float) Math.Round(pos.x,1),
+									 (float) Math.Round(pos.y,1),
+									 (float) Math.Round(pos.z,1));
 	}
 
 	private void fixchildren()
 	{
-		for(int i = 0; i < trans.childCount; i++)
+		Transform child;
+
+		while(trans.childCount > 0 && (child = trans.GetChild(0)) != null)
 		{
-			DestroyImmediate(trans.GetChild(0).gameObject);
+			DestroyImmediate(child.gameObject);
 		}
 		_pieces = new List<GameObject>();
 	}
@@ -41,10 +69,8 @@ public class IsleTile : MonoBehaviour
 		return true;
 	}
 
-	private void setupStartEndPoints()
+	private void createStartPoints()
 	{
-		checkList();
-
 		_start  = (GameObject) Instantiate(start, trans.position, trans.rotation);
 		_start.hideFlags = HideFlags.HideInHierarchy;
 		_start.GetComponent<Transform>().parent = trans; 
@@ -60,54 +86,46 @@ public class IsleTile : MonoBehaviour
 
 	private void resize()
 	{
-		if(size > lastsize)
+		try
 		{
-			for(int i = 0; i < (size - lastsize); i++)
+			if(size > lastsize)
 			{
-				var curTrans = _pieces[_pieces.Count-1].GetComponent<Transform>();
-				var curObj = (GameObject) Instantiate(middle, curTrans.position, curTrans.rotation);
-				curObj.hideFlags = HideFlags.HideInHierarchy; 
-				curObj.GetComponent<Transform>().parent = trans;
-				curObj.GetComponent<Transform>().Translate(new Vector3(1,0,0),Space.Self);
-				_pieces.Add(curObj);
+				for(int i = 0; i < (size - lastsize); i++)
+				{
+					var curTrans = _pieces[_pieces.Count-1].GetComponent<Transform>();
+					var curObj = (GameObject) Instantiate(middle, curTrans.position, curTrans.rotation);
+					curObj.hideFlags = HideFlags.HideInHierarchy; 
+					curObj.GetComponent<Transform>().parent = trans;
+					curObj.GetComponent<Transform>().Translate(new Vector3(1,0,0),Space.Self);
+					_pieces.Add(curObj);
+				}
 			}
+			else
+			{
+				for(int i = 0; i < (lastsize - size); i++)
+				{
+					DestroyImmediate(_pieces[_pieces.Count-1]);
+					_pieces.RemoveAt(_pieces.Count-1);
+				}
+			}
+			lastsize = size;
+			var lastTrans = _pieces[_pieces.Count-1].GetComponent<Transform>();
+			_end.GetComponent<Transform>().position = lastTrans.position;
+			_end.GetComponent<Transform>().Translate(new Vector3(1,0,0));
 		}
-		else
+		catch (System.ArgumentOutOfRangeException e)
 		{
-			for(int i = 0; i < (lastsize - size); i++)
-			{
-				DestroyImmediate(_pieces[_pieces.Count-1]);
-				_pieces.RemoveAt(_pieces.Count-1);
-			}
+			Debug.Log(e.Message, null);
+			reset();
 		}
-		lastsize = size;
-		var lastTrans = _pieces[_pieces.Count-1].GetComponent<Transform>();
-		_end.GetComponent<Transform>().position = lastTrans.position;
-		_end.GetComponent<Transform>().Translate(new Vector3(1,0,0));
-	}
-
-	void Start()
-	{
-		fixchildren();
-		setupStartEndPoints();
 	}
 
 	public void Update () 
 	{
-		checkList();
-
 		if(size == -1)
 		{
 			fixchildren();
-			setupStartEndPoints();
-		}
-
-
-		if(_start == null && _end == null &&
-			start != null && end != null)
-		{
-			fixchildren();
-			setupStartEndPoints();
+			createStartPoints();
 		}
 
 		if(size != lastsize && size >= 0)
@@ -116,7 +134,7 @@ public class IsleTile : MonoBehaviour
 		}
 	}
 
-	void OnDrawGizmos()
+	public void OnDrawGizmos()
 	{
 		Gizmos.color = new Color(1,0,1,1f);
 		Gizmos.DrawIcon(_start.transform.position, "Light Gizmo.tiff", true);
@@ -125,7 +143,7 @@ public class IsleTile : MonoBehaviour
     	Gizmos.DrawCube(_end.transform.position + new Vector3(0,0,-3), new Vector3(.2f,.2f,.2f));
 	}
 
-	void OnDrawGizmosSelected()
+	public void OnDrawGizmosSelected()
     {
     	/*
     	Gizmos.color = new Color(1,1,0,1f);
@@ -137,6 +155,4 @@ public class IsleTile : MonoBehaviour
 		Gizmos.DrawLine(_pieces[_pieces.Count-1].transform.position, _end.transform.position);
 		*/
 	}
-
-
 }

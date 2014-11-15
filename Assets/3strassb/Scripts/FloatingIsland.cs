@@ -5,12 +5,13 @@ public class FloatingIsland : MonoBehaviour {
 	public Vector3 start, end;
 	public float time;
 	public float waitTime;
+	private bool cubicTransform;
 	private float elapsedTime = 0;
 	private Vector3 speed;
 	private Transform trans;
 	private Vector3 destination;
 
-	void Awake ()
+	public void Awake ()
 	{
 		trans = GetComponent<Transform>();
 		speed = new Vector3((end.x - start.x)/time,
@@ -19,20 +20,39 @@ public class FloatingIsland : MonoBehaviour {
 		destination = end;
 	}
 
-	void Start () {
+	public void Start () {
 		
 		trans.position = start;
 		
 	}
+
+	private void linearMotion()
+	{
+		trans.Translate(speed*Time.deltaTime);		
+	}
+
+	private void cubicMotion()
+	{
+		var distance = destination - trans.position;
+
+		trans.Translate(distance*Time.deltaTime);
+	}
 	
-	void FixedUpdate () {
+	public void FixedUpdate () {
 		if(elapsedTime < waitTime)
 		{
 			elapsedTime += Time.deltaTime;
 		}
-		else if(Vector3.Distance(trans.position,destination) > 0.1f)
+		else if(Vector3.Distance(trans.position,destination) > 0.01f)
 		{
-			trans.Translate(speed*Time.deltaTime);
+			if(cubicTransform)
+			{
+				cubicMotion();
+			}
+			else
+			{
+				linearMotion();
+			}
 		}
 		else
 		{

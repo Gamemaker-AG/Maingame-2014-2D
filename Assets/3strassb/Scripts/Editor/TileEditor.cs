@@ -1,26 +1,29 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections;
+using System;
 
-[CustomEditor(typeof(IsleTile))]
-public class IsleTileEditor : Editor {	
-	private IsleTile _target;
-	private Object lastone;
+[CustomEditor(typeof(Tile))]
+public class TileEditor : Editor {	
+	private Tile _target;
+
+	public override void OnInspectorGUI () {
+		DrawDefaultInspector();
+		if(GUILayout.Button("Reset Tile"))
+		{
+			// Reseting the Tile
+			_target.reset();
+		}
+		if(GUILayout.Button("Round Position"))
+		{
+			// Reseting the Tile
+			_target.roundPosition();
+		}
+	}
 
 	public void Awake()
 	{
-		_target = (IsleTile) target;
-	}
-
-	public void Update()
-	{
-		if(lastone ==null)
-			lastone = Selection.activeObject;
-		if(lastone != Selection.activeObject)
-		{
-			lastone = Selection.activeObject;
-			_target.pos = _target._end.transform.position;
-		}
+		_target = (Tile) target;
 	}
 
 	public void OnSceneGUI () 
@@ -48,7 +51,7 @@ public class IsleTileEditor : Editor {
 		_target.pos.y = _target._end.transform.position.y;
 		_target.pos = Handles.FreeMoveHandle(_target.pos,
 			_target._end.transform.rotation,
-			2f,
+			3f,
 			Vector3.right,
 			Handles.ArrowCap);
 	}
