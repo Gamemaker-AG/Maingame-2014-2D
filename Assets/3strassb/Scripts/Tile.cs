@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 using System;
 
@@ -75,6 +75,7 @@ public class Tile : MonoBehaviour
 		_start.hideFlags = HideFlags.HideInHierarchy;
 		_start.GetComponent<Transform>().parent = trans; 
 		_start.GetComponent<Transform>().Translate(new Vector3(0,0,0),Space.Self);
+		//_start.GetComponent<Transform>().localScale = trans.localScale;
 
 		_pieces.Add(_start);
 
@@ -82,6 +83,8 @@ public class Tile : MonoBehaviour
 		_end.hideFlags = HideFlags.HideInHierarchy; 
 		_end.GetComponent<Transform>().parent = trans;
 		_end.GetComponent<Transform>().Translate(new Vector3(1,0,0),Space.Self);
+		//_end.GetComponent<Transform>().localScale = trans.localScale;
+
 	}
 
 	private void resize()
@@ -97,6 +100,7 @@ public class Tile : MonoBehaviour
 					curObj.hideFlags = HideFlags.HideInHierarchy; 
 					curObj.GetComponent<Transform>().parent = trans;
 					curObj.GetComponent<Transform>().Translate(new Vector3(1,0,0),Space.Self);
+					//curObj.transform.localScale = curTrans.localScale;
 					_pieces.Add(curObj);
 				}
 			}
