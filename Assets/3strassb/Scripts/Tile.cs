@@ -27,7 +27,7 @@ public class Tile : MonoBehaviour
 
 	public void Start()
 	{
-		createStartPoints();
+		reset();
 	}
 
 	public void reset()
@@ -97,7 +97,7 @@ public class Tile : MonoBehaviour
 				{
 					var curTrans = _pieces[_pieces.Count-1].GetComponent<Transform>();
 					var curObj = (GameObject) Instantiate(middle, curTrans.position, curTrans.rotation);
-					curObj.hideFlags = HideFlags.HideInHierarchy; 
+					//curObj.hideFlags = HideFlags.HideInHierarchy; 
 					curObj.GetComponent<Transform>().parent = trans;
 					curObj.GetComponent<Transform>().Translate(new Vector3(1,0,0),Space.Self);
 					//curObj.transform.localScale = curTrans.localScale;
@@ -141,10 +141,18 @@ public class Tile : MonoBehaviour
 	public void OnDrawGizmos()
 	{
 		Gizmos.color = new Color(1,0,1,1f);
-		Gizmos.DrawIcon(_start.transform.position, "Light Gizmo.tiff", true);
-		Gizmos.DrawIcon(_end.transform.position, "Light Gizmo.tiff", true);
-		Gizmos.DrawCube(_start.transform.position + new Vector3(0,0,-3), new Vector3(.2f,.2f,.2f));
-    	Gizmos.DrawCube(_end.transform.position + new Vector3(0,0,-3), new Vector3(.2f,.2f,.2f));
+		
+		if(_end != null)
+		{
+			Gizmos.DrawIcon(_end.transform.position, "Light Gizmo.tiff", true);
+			Gizmos.DrawCube(_end.transform.position + new Vector3(0,0,-3), new Vector3(.2f,.2f,.2f));	
+		}
+		if(_start != null)
+		{
+			Gizmos.DrawIcon(_start.transform.position, "Light Gizmo.tiff", true);
+			Gizmos.DrawCube(_start.transform.position + new Vector3(0,0,-3), new Vector3(.2f,.2f,.2f));
+		}
+		
 	}
 
 	public void OnDrawGizmosSelected()
