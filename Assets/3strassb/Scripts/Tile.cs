@@ -7,11 +7,13 @@ public class Tile : MonoBehaviour
 {
 	public GameObject start, middle, end;
 	public int size = 0;
+	public float spaceBetween = 1;
 	public bool vertical=false;
 	public bool repeatOnlyMiddle=false;
 	private Transform trans;
 	private List<GameObject> _pieces;
 	private int lastsize = 0;
+	private float lastSpaceBetween = 0;
 	[HideInInspector]
 	public Vector3 pos = new Vector3(1,0,0);
 	[HideInInspector]
@@ -74,7 +76,6 @@ public class Tile : MonoBehaviour
 		_start  = (GameObject) Instantiate(start, trans.position, trans.rotation);
 		_start.hideFlags = HideFlags.HideInHierarchy;
 		_start.GetComponent<Transform>().parent = trans; 
-		_start.GetComponent<Transform>().Translate(new Vector3(0,0,0),Space.Self);
 		//_start.GetComponent<Transform>().localScale = trans.localScale;
 
 		_pieces.Add(_start);
@@ -82,7 +83,7 @@ public class Tile : MonoBehaviour
 		_end 	= (GameObject) Instantiate(end, trans.position, trans.rotation);
 		_end.hideFlags = HideFlags.HideInHierarchy; 
 		_end.GetComponent<Transform>().parent = trans;
-		_end.GetComponent<Transform>().Translate(new Vector3(1,0,0),Space.Self);
+		_end.GetComponent<Transform>().Translate(new Vector3(spaceBetween,0,0),Space.Self);
 		//_end.GetComponent<Transform>().localScale = trans.localScale;
 
 	}
@@ -99,7 +100,7 @@ public class Tile : MonoBehaviour
 					var curObj = (GameObject) Instantiate(middle, curTrans.position, curTrans.rotation);
 					//curObj.hideFlags = HideFlags.HideInHierarchy; 
 					curObj.GetComponent<Transform>().parent = trans;
-					curObj.GetComponent<Transform>().Translate(new Vector3(1,0,0),Space.Self);
+					curObj.GetComponent<Transform>().Translate(new Vector3(spaceBetween,0,0),Space.Self);
 					//curObj.transform.localScale = curTrans.localScale;
 					_pieces.Add(curObj);
 				}
@@ -115,7 +116,7 @@ public class Tile : MonoBehaviour
 			lastsize = size;
 			var lastTrans = _pieces[_pieces.Count-1].GetComponent<Transform>();
 			_end.GetComponent<Transform>().position = lastTrans.position;
-			_end.GetComponent<Transform>().Translate(new Vector3(1,0,0));
+			_end.GetComponent<Transform>().Translate(new Vector3(spaceBetween,0,0));
 		}
 		catch (System.ArgumentOutOfRangeException e)
 		{
@@ -135,6 +136,12 @@ public class Tile : MonoBehaviour
 		if(size != lastsize && size >= 0)
 		{
 			resize();
+		}
+
+		if(spaceBetween != lastSpaceBetween)
+		{
+			lastSpaceBetween = spaceBetween;
+			reset();
 		}
 	}
 

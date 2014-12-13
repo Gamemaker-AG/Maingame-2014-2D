@@ -11,9 +11,16 @@ public class Collectable : MonoBehaviour {
 		if(!collected && collision.CompareTag("Player"))
 		{
 			collected = true;
-			Destroy(gameObject);
+			//Destroy(gameObject);
 			collision.SendMessage("AddPoints",1,SendMessageOptions.DontRequireReceiver);
-
+			GetComponent<Animator>().Play("CoinDeath");
+			GetComponent<AudioSource>().Play();
+			GetComponent<ParticleSystem>().Play();
 		}
+    }
+
+    void AnimationDone()
+    {
+    	Destroy(gameObject);
     }
 }

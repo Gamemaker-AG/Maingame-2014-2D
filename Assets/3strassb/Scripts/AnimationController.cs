@@ -2,31 +2,31 @@
 using System.Collections;
 
 public class AnimationController : MonoBehaviour {
-	private Animator _animation;
-	private Transform _trans;
-	private Vector3 _lastposition;
-	
-	public void Awake()
-	{
-		_trans = GetComponent<Transform>();
-		_animation = GetComponent<Animator>();
-		_lastposition = _trans.position;
-	}
+	private Animator animator;
+	private Rigidbody2D body;
 
-	void Start () {
-		
+	void Start () 
+	{
+		body = GetComponent<Rigidbody2D>();
+		animator = GetComponent<Animator>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if(_lastposition == _trans.position)
+		if(body.velocity.y < 0.5f && body.velocity.y > -0.5f && gameObject.GetComponent<PlayerMovement>().isGrounded)
 		{
-			_animation.Play("Standing");
+			if(body.velocity.x == 0)
+			{
+				animator.Play("Standing");
+			}
+			else 
+			{
+				animator.Play("Leg");
+			}
 		}
-		else 
+		else
 		{
-			_animation.Play("Leg");
+			animator.Play("Jump");
 		}
-		_lastposition = _trans.position;
 	}
 }

@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class FloatingIsland : MonoBehaviour {
 	public Vector3 start, end;
 	public float time;
 	public float waitTime;
-	private bool cubicTransform;
 	private float elapsedTime = 0;
 	private Vector3 speed;
 	private Transform trans;
 	private Vector3 destination;
+	private HashSet<GameObject> standingObjects;
 
 	public void Awake ()
 	{
@@ -18,12 +18,11 @@ public class FloatingIsland : MonoBehaviour {
 							(end.y - start.y)/time, 
 							(end.z - start.z)/time);
 		destination = end;
+		standingObjects = new HashSet<GameObject>();
 	}
 
 	public void Start () {
-		
 		trans.position = start;
-		
 	}
 
 	private void linearMotion()
@@ -31,11 +30,23 @@ public class FloatingIsland : MonoBehaviour {
 		trans.Translate(speed*Time.deltaTime);		
 	}
 
-	private void cubicMotion()
+	private void moveStandingObjects()
 	{
-		var distance = destination - trans.position;
+		foreach (GameObject obj in standingObjects)
+		{
+			obj.transform.Translate(speed*Time.deltaTime);
+			obj.transform.Translate(0 , (speed.y > 0 ? 0.001f : -0.001f), 0);
+		}
+	}
 
-		trans.Translate(distance*Time.deltaTime);
+	public void OnTriggerEnter2D(Collider2D coll)
+	{
+		standingObjects.Add(coll.gameObject);
+	}
+
+	public void OnTriggerExit2D(Collider2D coll)
+	{
+		standingObjects.Remove(coll.gameObject);
 	}
 	
 	public void FixedUpdate () {
@@ -45,14 +56,8 @@ public class FloatingIsland : MonoBehaviour {
 		}
 		else if(Vector3.Distance(trans.position,destination) > 0.01f)
 		{
-			if(cubicTransform)
-			{
-				cubicMotion();
-			}
-			else
-			{
-				linearMotion();
-			}
+			linearMotion();
+			moveStandingObjects();
 		}
 		else
 		{
