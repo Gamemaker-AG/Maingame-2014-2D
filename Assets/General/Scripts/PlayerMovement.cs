@@ -39,6 +39,8 @@ public class PlayerMovement : MonoBehaviour
             {
                 v.y = jumpPower;
                 jumpsLeft = jumpCount - 1;
+                GetComponent<AudioSource>().Play();
+                groundedChecker.GetComponent<ParticleSystem>().Play();
             }
         }
         else
@@ -47,12 +49,14 @@ public class PlayerMovement : MonoBehaviour
             {
                 v.y = jumpPower;
                 --jumpsLeft;
+                GetComponent<AudioSource>().Play();
+                groundedChecker.GetComponent<ParticleSystem>().Play();
             }
             
             v.x += movement * speed * Time.deltaTime;
             v.x = Mathf.Clamp(v.x, -maxAirSpeed, maxAirSpeed);
         }
-
+        v.y += 0.005f;
         rb.velocity = v;
 
         if(v.x != 0)
