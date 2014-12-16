@@ -53,6 +53,10 @@ public class PlayerMovement : MonoBehaviour
             v.x = Mathf.Clamp(v.x, -maxAirSpeed, maxAirSpeed);
         }
 
+		//fix stuck
+		if(v.y == 0)
+			v.y += 0.09f;
+
         rb.velocity = v;
 
         if(v.x != 0)
