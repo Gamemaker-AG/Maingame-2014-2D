@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+<<<<<<< HEAD
 [RequireComponent (typeof (Collider2D))]
 public class Bullet : MonoBehaviour {
 	public LayerMask mask;
@@ -39,5 +40,17 @@ public class Bullet : MonoBehaviour {
 				Hit (hit.collider);
 			}
 		}
+=======
+public class Bullet : MonoBehaviour {
+
+	// Use this for initialization
+	void Start () {
+	
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	
+>>>>>>> b0662d63e0329ff06f148943764d794f22d31b0d
 	}
 }

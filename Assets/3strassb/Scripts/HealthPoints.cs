@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+<<<<<<< HEAD
 using UnityEngine.UI;
 using System.Collections;
 
@@ -74,5 +75,25 @@ public class HealthPoints : MonoBehaviour {
 		curHealthpoints += points;
 		if (curHealthpoints > maxHealthpoints)
 			curHealthpoints = maxHealthpoints;
+=======
+using System.Collections;
+
+public class HealthPoints : MonoBehaviour {
+	public double Healthpoints = 100;
+	
+	void TakeDamage(double dmg)
+	{
+		Healthpoints-= dmg;
+	}
+
+	void Heal(double points)
+	{
+		Healthpoints-= points;
+	}
+
+	void OnGUI()
+	{
+		GUI.Box(new Rect(170, 10, 160, 60), "Points");
+>>>>>>> b0662d63e0329ff06f148943764d794f22d31b0d
 	}
 }

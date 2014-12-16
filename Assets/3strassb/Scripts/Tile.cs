@@ -8,9 +8,13 @@ public class Tile : MonoBehaviour
 	public GameObject start, middle, end;
 	public int size = 0;
 	public float spaceBetween = 1;
+<<<<<<< HEAD
 	[HideInInspector]
 	public bool vertical=false;
 	[HideInInspector]
+=======
+	public bool vertical=false;
+>>>>>>> b0662d63e0329ff06f148943764d794f22d31b0d
 	public bool repeatOnlyMiddle=false;
 	private Transform trans;
 	private List<GameObject> _pieces;
@@ -73,6 +77,7 @@ public class Tile : MonoBehaviour
 		return true;
 	}
 
+<<<<<<< HEAD
 	private void RekursiveHideFlags(GameObject obj)
 	{
 		obj.hideFlags = HideFlags.HideInHierarchy;
@@ -82,13 +87,18 @@ public class Tile : MonoBehaviour
 		}
 	}
 
+=======
+>>>>>>> b0662d63e0329ff06f148943764d794f22d31b0d
 	private void createStartPoints()
 	{
 		_start  = (GameObject) Instantiate(start, trans.position, trans.rotation);
 		_start.hideFlags = HideFlags.HideInHierarchy;
 		_start.GetComponent<Transform>().parent = trans; 
 		//_start.GetComponent<Transform>().localScale = trans.localScale;
+<<<<<<< HEAD
 		RekursiveHideFlags(_start);
+=======
+>>>>>>> b0662d63e0329ff06f148943764d794f22d31b0d
 
 		_pieces.Add(_start);
 
@@ -97,7 +107,10 @@ public class Tile : MonoBehaviour
 		_end.GetComponent<Transform>().parent = trans;
 		_end.GetComponent<Transform>().Translate(new Vector3(spaceBetween,0,0),Space.Self);
 		//_end.GetComponent<Transform>().localScale = trans.localScale;
+<<<<<<< HEAD
 		RekursiveHideFlags(_end);
+=======
+>>>>>>> b0662d63e0329ff06f148943764d794f22d31b0d
 
 	}
 
@@ -111,9 +124,16 @@ public class Tile : MonoBehaviour
 				{
 					var curTrans = _pieces[_pieces.Count-1].GetComponent<Transform>();
 					var curObj = (GameObject) Instantiate(middle, curTrans.position, curTrans.rotation);
+<<<<<<< HEAD
 					RekursiveHideFlags(curObj);
 					curObj.GetComponent<Transform>().parent = transform;
 					curObj.GetComponent<Transform>().Translate(new Vector3(spaceBetween,0,0),Space.Self);
+=======
+					//curObj.hideFlags = HideFlags.HideInHierarchy; 
+					curObj.GetComponent<Transform>().parent = trans;
+					curObj.GetComponent<Transform>().Translate(new Vector3(spaceBetween,0,0),Space.Self);
+					//curObj.transform.localScale = curTrans.localScale;
+>>>>>>> b0662d63e0329ff06f148943764d794f22d31b0d
 					_pieces.Add(curObj);
 				}
 			}

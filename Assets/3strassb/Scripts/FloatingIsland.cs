@@ -32,10 +32,17 @@ public class FloatingIsland : MonoBehaviour {
 
 	private void moveStandingObjects()
 	{
+<<<<<<< HEAD
 		Vector2 deltaMovement = new Vector2 ((speed * Time.deltaTime).x, (speed * Time.deltaTime).y);
 		foreach (GameObject obj in standingObjects)
 		{
 			obj.transform.Translate(deltaMovement);
+=======
+		foreach (GameObject obj in standingObjects)
+		{
+			obj.transform.Translate(speed*Time.deltaTime);
+			obj.transform.Translate(0 , (speed.y > 0 ? 0.001f : -0.001f), 0);
+>>>>>>> b0662d63e0329ff06f148943764d794f22d31b0d
 		}
 	}
 

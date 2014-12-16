@@ -1,10 +1,14 @@
 ﻿using UnityEngine;
+<<<<<<< HEAD
 using UnityEngine.UI;
+=======
+>>>>>>> b0662d63e0329ff06f148943764d794f22d31b0d
 using System.Collections;
 
 public class PlayerGun : MonoBehaviour 
 {
 	public GameObject projectile;
+<<<<<<< HEAD
 	public AudioClip shootSound;
 	public float crosshairScale = 1.0f;
 	public float fireRate = 1f;
@@ -26,6 +30,16 @@ public class PlayerGun : MonoBehaviour
 	private Slider clipAmmunationSlider;
 	private Text clipText;
 
+=======
+	public float crosshairScale = 1.0f;
+	public float fireRate = 1f;
+	public float bulletSpeed = 10f;
+	public Material lineMaterial;
+	private float cooldown = 0f;
+	private LineRenderer lineRender;
+	private Camera gameCamera;
+	private GameObject pentagon;
+>>>>>>> b0662d63e0329ff06f148943764d794f22d31b0d
 	private Vector3[] PentagonVertices = 
 	{
 		new Vector3(-0.5f,1,0),
@@ -45,6 +59,7 @@ public class PlayerGun : MonoBehaviour
 		gameCamera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
 		setupPentagon();
 		Screen.showCursor = false;
+<<<<<<< HEAD
 		clipAmmunationSlider = clipSizeUi.GetComponent<Slider> ();
 		clipText = clipAmmountUi.GetComponent<Text> ();
 
@@ -55,6 +70,8 @@ public class PlayerGun : MonoBehaviour
 	public void AddClip(int ammount)
 	{
 		clipAmmount += ammount;
+=======
+>>>>>>> b0662d63e0329ff06f148943764d794f22d31b0d
 	}
 
 	private void setupPentagon()
@@ -86,6 +103,7 @@ public class PlayerGun : MonoBehaviour
 
 	void FixedUpdate()
 	{
+<<<<<<< HEAD
 		if (!reloading) 
 		{
 			if(clipAmmunationSlider.value > 0 && cooldown < 0 && Input.GetMouseButton(0))
@@ -123,6 +141,17 @@ public class PlayerGun : MonoBehaviour
 				clipText.text = clipAmmount.ToString();
 			}
 		}
+=======
+		if(Input.GetMouseButton(0) && cooldown < 0)
+		{
+			cooldown = 1f/fireRate;
+			Vector3 lookRatation = ( gameCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position);
+			GameObject obj = (GameObject) Instantiate(projectile,transform.position, Quaternion.LookRotation(Vector3.forward, lookRatation));
+			obj.transform.Rotate(new Vector3(0,0,90));
+			obj.GetComponent<Rigidbody2D>().AddRelativeForce(new Vector2(bulletSpeed,0), ForceMode2D.Impulse);
+		}
+		cooldown -= Time.deltaTime;
+>>>>>>> b0662d63e0329ff06f148943764d794f22d31b0d
 	}
 	
 	void Update () 
