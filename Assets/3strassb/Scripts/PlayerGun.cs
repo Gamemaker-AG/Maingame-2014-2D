@@ -1,17 +1,31 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class PlayerGun : MonoBehaviour 
 {
 	public GameObject projectile;
+
+	public AudioClip shootSound;
 	public float crosshairScale = 1.0f;
 	public float fireRate = 1f;
+	public float reloadTime = 1f;
 	public float bulletSpeed = 10f;
+	public int clipSize = 17;
+	public int clipAmmount = 5;
 	public Material lineMaterial;
+	public GameObject clipSizeUi;
+	public GameObject clipAmmountUi;
+
+	private bool reloading = false;
 	private float cooldown = 0f;
-	private LineRenderer lineRender;
 	private Camera gameCamera;
+
+	private LineRenderer lineRender;
 	private GameObject pentagon;
+
+	private Slider clipAmmunationSlider;
+	private Text clipText;
 	private Vector3[] PentagonVertices = 
 	{
 		new Vector3(-0.5f,1,0),
@@ -31,6 +45,17 @@ public class PlayerGun : MonoBehaviour
 		gameCamera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
 		setupPentagon();
 		Screen.showCursor = false;
+
+		clipAmmunationSlider = clipSizeUi.GetComponent<Slider> ();
+		clipText = clipAmmountUi.GetComponent<Text> ();
+
+		clipAmmunationSlider.maxValue = clipSize;
+		clipText.text = clipAmmount.ToString();
+	}
+
+	public void AddClip(int ammount)
+	{
+		clipAmmount += ammount;
 	}
 
 	private void setupPentagon()
@@ -62,15 +87,44 @@ public class PlayerGun : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		if(Input.GetMouseButton(0) && cooldown < 0)
+
+		if (!reloading) 
 		{
-			cooldown = 1f/fireRate;
-			Vector3 lookRatation = ( gameCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position);
-			GameObject obj = (GameObject) Instantiate(projectile,transform.position, Quaternion.LookRotation(Vector3.forward, lookRatation));
-			obj.transform.Rotate(new Vector3(0,0,90));
-			obj.GetComponent<Rigidbody2D>().AddRelativeForce(new Vector2(bulletSpeed,0), ForceMode2D.Impulse);
+			if(clipAmmunationSlider.value > 0 && cooldown < 0 && Input.GetMouseButton(0))
+			{
+				cooldown = 1f/fireRate;
+				Vector3 lookRatation = ( gameCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position);
+				GameObject obj = (GameObject) Instantiate(projectile,transform.position, Quaternion.LookRotation(Vector3.forward, lookRatation));
+				obj.transform.Rotate(new Vector3(0,0,90));
+				obj.GetComponent<Rigidbody2D>().AddRelativeForce(new Vector2(bulletSpeed,0), ForceMode2D.Impulse);
+				clipAmmunationSlider.value -= 1;
+				if(shootSound)
+				{
+					AudioSource.PlayClipAtPoint(shootSound,transform.position);
+				}
+			}
+			else if (clipAmmunationSlider.value == 0 && clipAmmount > 0) 
+			{
+				reloading = true;
+			}
+			else
+			{
+				cooldown -= Time.deltaTime;
+			}
+		} 
+		else 
+		{
+			if (clipAmmunationSlider.value < clipAmmunationSlider.maxValue)
+			{
+				clipAmmunationSlider.value += clipAmmunationSlider.maxValue / reloadTime * Time.deltaTime;
+			}
+			else if (clipAmmunationSlider.value == clipAmmunationSlider.maxValue)
+			{
+				reloading = false;
+				clipAmmount--;
+				clipText.text = clipAmmount.ToString();
+			}
 		}
-		cooldown -= Time.deltaTime;
 	}
 	
 	void Update () 
