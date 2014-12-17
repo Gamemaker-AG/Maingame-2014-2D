@@ -72,7 +72,7 @@ public class Tile : MonoBehaviour
 		}
 		return true;
 	}
-
+	
 	private void RekursiveHideFlags(GameObject obj)
 	{
 		obj.hideFlags = HideFlags.HideInHierarchy;
@@ -81,13 +81,13 @@ public class Tile : MonoBehaviour
 			obj.transform.GetChild(i).gameObject.hideFlags = HideFlags.HideInHierarchy;
 		}
 	}
-
+	
 	private void createStartPoints()
 	{
 		_start  = (GameObject) Instantiate(start, trans.position, trans.rotation);
 		_start.hideFlags = HideFlags.HideInHierarchy;
 		_start.GetComponent<Transform>().parent = trans; 
-		//_start.GetComponent<Transform>().localScale = trans.localScale;
+
 		RekursiveHideFlags(_start);
 
 		_pieces.Add(_start);
@@ -96,7 +96,7 @@ public class Tile : MonoBehaviour
 		_end.hideFlags = HideFlags.HideInHierarchy; 
 		_end.GetComponent<Transform>().parent = trans;
 		_end.GetComponent<Transform>().Translate(new Vector3(spaceBetween,0,0),Space.Self);
-		//_end.GetComponent<Transform>().localScale = trans.localScale;
+
 		RekursiveHideFlags(_end);
 
 	}
@@ -111,9 +111,11 @@ public class Tile : MonoBehaviour
 				{
 					var curTrans = _pieces[_pieces.Count-1].GetComponent<Transform>();
 					var curObj = (GameObject) Instantiate(middle, curTrans.position, curTrans.rotation);
+
 					RekursiveHideFlags(curObj);
 					curObj.GetComponent<Transform>().parent = transform;
 					curObj.GetComponent<Transform>().Translate(new Vector3(spaceBetween,0,0),Space.Self);
+
 					_pieces.Add(curObj);
 				}
 			}

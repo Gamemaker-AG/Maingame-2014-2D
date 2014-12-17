@@ -22,7 +22,6 @@ public class CameraShake : MonoBehaviour {
 
 	public void ShakeCamera()
 	{
-		ShakeOneTime ();
 		shakesRemaining = shakesPerHit;
 	}
 

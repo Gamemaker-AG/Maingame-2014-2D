@@ -74,5 +74,6 @@ public class HealthPoints : MonoBehaviour {
 		curHealthpoints += points;
 		if (curHealthpoints > maxHealthpoints)
 			curHealthpoints = maxHealthpoints;
+
 	}
 }

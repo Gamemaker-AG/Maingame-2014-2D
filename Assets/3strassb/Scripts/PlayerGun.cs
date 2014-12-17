@@ -5,7 +5,6 @@ using System.Collections;
 public class PlayerGun : MonoBehaviour 
 {
 	public GameObject projectile;
-
 	public AudioClip shootSound;
 	public float crosshairScale = 1.0f;
 	public float fireRate = 1f;
@@ -26,6 +25,7 @@ public class PlayerGun : MonoBehaviour
 
 	private Slider clipAmmunationSlider;
 	private Text clipText;
+	
 	private Vector3[] PentagonVertices = 
 	{
 		new Vector3(-0.5f,1,0),
@@ -87,7 +87,6 @@ public class PlayerGun : MonoBehaviour
 
 	void FixedUpdate()
 	{
-
 		if (!reloading) 
 		{
 			if(clipAmmunationSlider.value > 0 && cooldown < 0 && Input.GetMouseButton(0))
